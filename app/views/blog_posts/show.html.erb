@@ -1,44 +1,61 @@
-<p id="notice"><%= notice %></p>
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @blog_post.title %>
-</p>
+		<h2>
+		  <%= @blog_post.title %>
+		</h2>
 
-<p>
-  <strong>Author:</strong>
-  <%= @blog_post.user.email %>
-</p>
-
-<p>
-  <strong>Blog entry:</strong>
-  <%= @blog_post.blog_entry %>
-</p>
-
-<%= link_to 'Edit', edit_blog_post_path(@blog_post) %> |
-<%= link_to 'Back', blog_posts_path %>
-
-<div>
-	<h3>Comments</h3>
-
-	<%= form_tag(create_comment_path) do %>
-		<%= text_area_tag :comment_entry, nil, placeholder: "And your reply is..." %><br />
-		<%= hidden_field_tag :blog_post_id, @blog_post.id %>
-		<%= hidden_field_tag :user_id, current_user.id %>
-		<%= submit_tag "Submit", class: "btn btn-primary" %>
-	<% end %>
-
-	<% @blog_post.comments.each do |comment| %>
 		<p>
-			<%= comment.user.email %> said ... <%= comment.comment_entry %>
+		  <em>posted by</em> <%= @blog_post.user.username %>
 		</p>
-	<% end %>
+
+		<p>
+			<em>at</em> <%= @blog_post.created_at.strftime("%m/%d/%y %l:%M%p") %>
+		</p>
+
+		<p>
+		  <%= @blog_post.blog_entry %>
+		</p>
+
+		<% if current_user.id == @blog_post.user.id %>
+			<p>
+				<%= link_to 'Edit', edit_blog_post_path(@blog_post), class: "btn btn-warning" %>
+				<%= link_to 'Destroy', @blog_post, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+			</p>
+		<% end %>
+
+		<div>
+			<h3>Comments</h3>
+
+			<% if @comment.nil? %>
+				<%= form_tag(create_comment_path) do %>
+					<%= text_area_tag :comment_entry, nil, placeholder: "And your reply is...", rows: 7, cols: 50 %><br />
+					<%= hidden_field_tag :blog_post_id, @blog_post.id %>
+					<%= hidden_field_tag :user_id, current_user.id %>
+					<%= submit_tag "Submit", class: "btn btn-primary" %>
+				<% end %>
+			<% else %>
+				<%= form_tag(edit_comment_path) do %>
+					<%= text_area_tag :comment_entry, @comment.comment_entry, placeholder: "And your reply is...", rows: 7, cols: 50 %><br />
+					<%= hidden_field_tag :comment_id, @comment.id %>
+					<%= submit_tag "Edit", class: "btn btn-primary" %>
+				<% end %>
+			<% end %>
+
+			<% @blog_post.comments.each do |comment| %>
+				<div class="well">
+					<p>
+						<%= comment.user.username %> said ... <%= comment.comment_entry %>
+					</p>
+					<% if current_user.id == comment.user.id || current_user.id == @blog_post.id %>
+						<p>
+							<%= link_to "Edit", "/blog_posts/#{@blog_post.id}?comment_id=#{comment.id}" %> | 
+							<%= link_to "Delete", delete_comment_path(id: comment.id), data: { confirm: 'Regret setting in?' } %>
+						</p>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+	</div>
 </div>
-
-
-
-
-
-
-
-

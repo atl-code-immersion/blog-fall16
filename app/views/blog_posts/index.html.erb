@@ -1,24 +1,22 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Blog Posts</h1>
-
-<%= link_to 'New Blog Post', new_blog_post_path %>
+<div class="center-it">
+  <h1>Blog Post Feed</h1>
+</div>
 
 <div class="row">
   <% @blog_posts.each do |blog_post| %>
     <div class="col-md-10 col-md-offset-1">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <%= blog_post.title %>
+          <h3>
+            <%= link_to blog_post.title, blog_post %>
+          </h3>
         </div>
         <div class="panel-body">
-          <p>by <%= blog_post.user.email %></p>
+          <p>by <%= blog_post.user.username %></p>
+          <p><em>posted at</em> <%= blog_post.created_at.strftime("%m/%d/%y %l:%M%p") %></p>
           <p><%= blog_post.blog_entry %></p>
-        </div>
-        <div class="panel-footer">
-          <%= link_to 'Show', blog_post %> | 
-          <%= link_to 'Edit', edit_blog_post_path(blog_post) %> | 
-          <%= link_to 'Destroy', blog_post, method: :delete, data: { confirm: 'Are you sure?' } %>
         </div>
       </div>
     </div>

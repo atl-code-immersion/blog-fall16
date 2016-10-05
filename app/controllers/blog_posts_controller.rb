@@ -10,6 +10,13 @@ class BlogPostsController < ApplicationController
   # GET /blog_posts/1
   # GET /blog_posts/1.json
   def show
+    puts "***********"
+    puts params[:comment_id]
+    puts "***********"
+    
+    if params[:comment_id] != nil
+      @comment = Comment.find(params[:comment_id])
+    end
   end
 
   # GET /blog_posts/new
@@ -23,6 +30,17 @@ class BlogPostsController < ApplicationController
 
   def create_comment
     Comment.create(author: params[:author], comment_entry: params[:comment_entry], blog_post_id: params[:blog_post_id], user_id: params[:user_id])
+    redirect_to :back
+  end
+
+  def edit_comment
+    comment = Comment.find(params[:comment_id])
+    comment.update(comment_entry: params[:comment_entry])
+    redirect_to comment.blog_post
+  end
+
+  def delete_comment
+    Comment.find(params[:id]).destroy
     redirect_to :back
   end
 

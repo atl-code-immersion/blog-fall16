@@ -11,21 +11,23 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :title %>
-    <%= f.text_field :title %>
+  <div class="form-group">
+    <%= f.text_field :title, placeholder: "Title Your Post", class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= f.label :blog_entry %>
-    <%= f.text_area :blog_entry %>
+  <div class="form-group">
+    <%= f.text_area :blog_entry, placeholder: "Say what you will...", class: "form-control", rows: 10 %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.hidden_field :user_id, value: current_user.id %>
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <% if current_page?(new_blog_post_path) %>
+      <%= f.submit "Post It!", class: "btn btn-success" %>
+    <% else %>
+      <%= f.submit "Post Edit", class: "btn btn-success" %>
+    <% end %>
   </div>
 <% end %>
